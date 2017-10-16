@@ -1,26 +1,25 @@
 {
-  "name": "app",
-  "version": "1.0.0",
-  "description": "Demo of how to build an app using marko-starter",
+  "name": "taptap",
+  "version": "0.1.0",
+  "description": "App where you Tap",
   "repository": {
     "type": "git",
-    "url": "https://github.com/marko-js-samples/marko-starter-demo"
+    "url": "https://github.com/amatho/taptap"
   },
   "license": "MIT",
   "devDependencies": {
     "eslint": "^4.2.0",
     "eslint-config-prettier": "^2.3.0",
     "eslint-plugin-prettier": "^2.1.2",
+    "lasso-cli": "^2.0.8",
     "prettier": "^1.5.2"
   },
   "dependencies": {
-    "marko": "^4.2.4",
-    "marko-starter": "^1.0.0"
+    "lasso-marko": "^2.3.1",
+    "marko": "^4.2.4"
   },
   "scripts": {
-    "start": "marko-starter server",
-    "build": "NODE_ENV=production marko-starter build",
-    "serve-static": "NODE_ENV=production marko-starter serve-static",
+    "build": "lasso --main src/main.js --plugins lasso-marko --inject-into public/index.html",
     "lint": "eslint src/",
     "test": "npm run lint",
     "prettier": "prettier src/**/*.{js,css,less} *.js --write"
