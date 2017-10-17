@@ -19,7 +19,9 @@
     "marko": "^4.2.4"
   },
   "scripts": {
-    "build": "lasso --main src/main.js --plugins lasso-marko --inject-into public/index.html",
+    "build": "lasso --main src/main.js --plugins lasso-marko --inject-into index.html",
+    "dist": "lasso --main src/main.js --plugins lasso-marko --inject-into index.html --production",
+    "deploy": "cd dist && git add --all && git commit -m \"Release at $(date)\" && git push",
     "lint": "eslint src/",
     "test": "npm run lint",
     "prettier": "prettier src/**/*.{js,css,less} *.js --write"
