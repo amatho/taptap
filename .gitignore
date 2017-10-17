@@ -1,11 +1,7 @@
 .git/
 node_modules/
+build/
 dist/
+static/
 .cache/
-*.log
-*.bak.js
-*.bak
-*.marko.js
 .DS_STORE
-dump.rdb
-.marko-devtools/
