@@ -5,6 +5,7 @@ body {
   font-family: sans-serif;
   line-height: 1.5;
   min-height: 100vh;
+  background-color: #fafafa;
   overflow-x: hidden;
 }
 
@@ -26,41 +27,33 @@ body {
   box-shadow: 0 2px 4px -1px rgba(0,0,0,.2),
   0 4px 5px 0 rgba(0,0,0,.14),
   0 1px 10px 0 rgba(0,0,0,.12);
+  z-index: 99;
 }
 
-.info-cards {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 2;
-}
-
-.info-cards .card {
+.info-card {
   position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background-color: #fefefe;
-  width: 80%;
-  min-height: 200px;
-  margin: 16px;
+  min-height: 100px;
+  margin: 80px 16px 16px 16px;
   padding: 16px 8px 8px 8px;
   border-radius: 3px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+  z-index: 1;
   will-change: transform;
   transition: transform 400ms;
 }
 
-.info-cards .card.hidden {
-  transform: translateX(115%);
-}
-
-.info-cards .card.done {
+.info-card.done {
   transform: translateX(-115%);
 }
 
-.info-cards .card button.btn {
+.info-card button.btn {
   display: inline-block;
   align-self: flex-end;
   border: 0;
@@ -73,33 +66,17 @@ body {
   background-color: rgba(0, 0, 0, 0);
   color: #757575;
   outline: 0;
+  cursor: pointer;
   transition: background-color 200ms, color 200ms;
 }
 
-.info-cards .card button.btn:hover {
+.info-card button.btn:hover {
   background-color: rgba(0, 0, 0, 0.1);
   color: #212121;
 }
 
-.info-cards .card button.btn:active {
+.info-card button.btn:active {
   background-color: rgba(0, 0, 0, 0.2);
-}
-
-.shadow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #000000;
-  opacity: 0.7;
-  z-index: 1;
-  transition: opacity 200ms;
-}
-
-.shadow.disabled {
-  opacity: 0;
-  pointer-events: none;
 }
 
 #tap-area {

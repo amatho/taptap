@@ -1,45 +1,42 @@
-const infoCards = document.querySelector('.info-cards');
-const shadow = document.querySelector('.shadow');
+const infoCard = document.querySelector('.info-card');
+const nextButton = infoCard.querySelector('button.btn');
 const tapArea = document.getElementById('tap-area');
 
-const LEFT_HAND = 0;
-const RIGHT_HAND = 1;
+const LEFT_HAND = 'left';
+const RIGHT_HAND = 'right';
 let activeHand = LEFT_HAND;
 let testingTaps = false;
 const data = {
-  0: {},
-  1: {}
+  'left': {
+    tries: 0
+  },
+  'right': {
+    tries: 0
+  }
 };
+let timeStarted;
+let _taps = 0;
 
-infoCards.querySelectorAll('.card button.btn').forEach(button => {
-  button.addEventListener('click', evt => {
-    evt.target.parentElement.classList.add('done');
-    const nextCards = Array.prototype.filter.call(infoCards.children, card => {
-      return card !== evt.target.parentElement &&
-        !card.classList.contains('done');
-    });
-
-    if (nextCards.length <= 0) {
-      shadow.classList.add('disabled');
-      startTapTesting();
-      return;
-    }
-
-    nextCards[0].classList.remove('hidden');
-  });
+nextButton.addEventListener('click', evt => {
+  console.log('click');
+  infoCard.classList.add('done');
+  startTapTesting();
 });
 
-data[LEFT_HAND].taps = 0;
-data[RIGHT_HAND].taps = 0;
-
 tapArea.addEventListener('click', evt => {
-  if (testingTaps) {
-    data[activeHand].taps += 1;
+  if (!timeStarted) {
+    timeStarted = new Date();
+    checkTimelimit();
   }
 
-  tapArea.innerHTML = `
-  You have tapped ${data[activeHand].taps} times!
-  `;
+  if (testingTaps) {
+    _taps += 1;
+
+    tapArea.innerHTML = `
+    You are on try number <b>${data[activeHand].tries + 1}</b>,
+    and you have tapped <b>${_taps}</b> times!
+    `;
+  }
 });
 
 function startTapTesting() {
@@ -48,5 +45,47 @@ function startTapTesting() {
   <h1>Testing your ${fingerName} index finger</h1>
   <h2>Start tapping to start the test!</h2>
   `;
-  testingTaps = true;
+
+  setTimeout(() => {
+    testingTaps = true;
+  }, 1000);
+}
+
+function checkTimelimit() {
+  let interval = setInterval(() => {
+    if (new Date() - timeStarted > 10000) {
+      console.log('outta time');
+      testingTaps = false;
+      timeStarted = false;
+      clearInterval(interval);
+
+      if (data[activeHand].tries >= 4) {
+        activeHand = RIGHT_HAND;
+        prepareNextTry();
+      } else if (data[RIGHT_HAND].tries >= 4) {
+        testingTaps = false;
+        return;
+      } else {
+        data[activeHand].tries += 1;
+        prepareNextTry();
+      }
+
+    }
+  }, 0.1);
+}
+
+function prepareNextTry() {
+  testingTaps = false;
+  let tryNum = data[activeHand].tries;
+  let taps = data[activeHand].taps;
+  data[activeHand]['try' + tryNum] = taps;
+  data[activeHand].taps = 0;
+
+  tapArea.innerHTML = `
+  Get ready for your next try on your ${activeHand} index finger! Tap the screen to start.
+  `;
+
+  setTimeout(() => {
+    testingTaps = true;
+  }, 1000);
 }
