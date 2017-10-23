@@ -5,11 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>TapTap</title>
+  <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
   <div class="info-cards">
-    <div class="card">Welcome to taptap. ye ye ye</div>
-    <div class="card">Here's what you have to do: tap the screen or something</div>
+    <div class="card">
+      Welcome to taptap. ye ye ye
+      <button class="btn">next</button>
+    </div>
+    <div class="card hidden">
+      Here's what you have to do: tap the screen or something
+      <button class="btn">next</button>
+    </div>
   </div>
 
   <div class="shadow"></div>
@@ -19,5 +26,7 @@
       <span id="taps">0</span> taps
     </div>
   </div>
+
+  <script src="scripts/main.js" defer></script>
 </body>
 </html>
