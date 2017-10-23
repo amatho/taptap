@@ -75,3 +75,8 @@ body {
   z-index: 1;
   transition: opacity 200ms;
 }
+
+.shadow.disabled {
+  opacity: 0;
+  pointer-events: none;
+}
