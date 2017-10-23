@@ -33,8 +33,10 @@ tapArea.addEventListener('click', evt => {
     _taps += 1;
 
     tapArea.innerHTML = `
-    You are on try number <b>${data[activeHand].tries + 1}</b>,
-    and you have tapped <b>${_taps}</b> times!
+    <div>
+      You are on try number <b>${data[activeHand].tries + 1}</b>,
+      and you have tapped <b>${_taps}</b> times!
+    </div>
     `;
   }
 });
@@ -82,10 +84,13 @@ function checkTimelimit() {
 }
 
 function prepareNextTry() {
+  _taps = 0;
   testingTaps = false;
 
   tapArea.innerHTML = `
-  Get ready for your next try on your ${activeHand} index finger! Tap the screen to start.
+  <h2>
+    Get ready for your next try on your <strong>${activeHand}</strong> index finger! Tap the screen to start.
+  </h2>
   `;
 
   setTimeout(() => {
@@ -94,52 +99,69 @@ function prepareNextTry() {
 }
 
 function showResults() {
-  let leftTriesKeys = Object.keys(data[LEFT_HAND]).filter(key => {
-    return key.indexOf('key') !== -1;
-  });
-  let rightTriesKeys = Object.keys(data[RIGHT_HAND]).filter(key => {
-    return key.indexOf('key') !== -1;
-  });
-
-  let sum = 0;
-  let leftAverage;
-  let rightAverage;
-
-  for (let i = 0; i < 5; i++) {
-    sum += data[LEFT_HAND]['try' + i];
-  }
-
-  leftAverage = sum / 5;
-  sum = 0;
-
-  for (let i = 0; i < 5; i++) {
-    sum += data[RIGHT_HAND]['try' + i];
-  }
-
-  rightAverage = sum / 5;
-
-  let tbody = '';
-  for (let i = 0; i < 5; i++) {
-    let tr = `<tr>Try ${i + 1}`;
-    let left;
-    let right;
-    for (let j = 0; j < 2; j++) {
-      if (j = 0) {
-        left = `<td>${data[LEFT_HAND]['try' + i]}</td>`;
-      } else {
-        right = `<td>${data[RIGHT_HAND]['try' + i]}</td>`;
-      }
-    }
-    tr += '${left}${right}</tr>';
-    tbody += tr;
-  }
-
-  tapArea.innerHTML = `
-  <h1>Your results</h1>
-  <table>
-    <tbody>
-      ${tbody}
-    </tbody>
-  </table>
+  const table = document.createElement('table');
+  table.createTHead().innerHTML = `
+  <tr>
+    <th>Try Number</th>
+    <th>Left Hand</th>
+    <th>Right Hand</th>
+  </tr>
   `;
+  const tbody = table.createTBody();
+
+  const leftNumbers = Object.keys(data[LEFT_HAND])
+    .filter(key => key.indexOf('try') !== -1)
+    .map(key => {
+      return Number(data[LEFT_HAND][key]);
+    });
+
+  const rightNumbers = Object.keys(data[RIGHT_HAND])
+    .filter(key => key.indexOf('try') !== -1)
+    .map(key => {
+      return Number(data[RIGHT_HAND][key]);
+    });
+
+  const leftAverage = leftNumbers.reduce((acc, val) => {
+    return acc + val;
+  }) / leftNumbers.length;
+
+  const rightAverage = rightNumbers.reduce((acc, val) => {
+    return acc + val;
+  }) / rightNumbers.length;
+
+  for (let i = 0; i < 5; i++) {
+    const left = leftNumbers[i];
+    const right = rightNumbers[i];
+
+    const tr = `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${left}</td>
+      <td>${right}</td>
+    </tr>
+    `;
+
+    tbody.innerHTML += tr;
+  }
+
+  tbody.innerHTML += `
+  <tr>
+    <th>Average</th>
+    <td>${leftAverage}</td>
+    <td>${rightAverage}</td>
+  </tr>
+  `;
+
+  tapArea.innerHTML = '<h1>Your results</h1>';
+  tapArea.appendChild(table);
+}
+
+function mock() {
+  for (let i = 0; i < 5; i++) {
+    data[LEFT_HAND]['try'+i] = Math.pow(i + 1, 2);
+    data[RIGHT_HAND]['try'+i] = Math.pow(i + 1, 2);
+  }
+
+  data[LEFT_HAND].tries = 4;
+  data[RIGHT_HAND].tries = 4;
 }

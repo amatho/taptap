@@ -44,7 +44,7 @@ body {
   padding: 16px 8px 8px 8px;
   border-radius: 3px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-  z-index: 1;
+  z-index: 2;
   will-change: transform;
   transition: transform 400ms;
 }
@@ -85,7 +85,19 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 16px;
   margin-top: 64px;
   user-select: none;
+  z-index: 1;
+}
+
+#tap-area:active {
+  background-color: #f5f5f5;
+}
+
+#tap-area h2 {
+  font-weight: 400;
 }
