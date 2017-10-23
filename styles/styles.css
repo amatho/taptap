@@ -27,15 +27,16 @@ body {
   padding: 8px;
   border-radius: 3px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-  transition: transform 200ms;
+  will-change: transform;
+  transition: transform 400ms;
 }
 
-.info-cards .card .hidden {
-  transform: translateX(150%);
+.info-cards .card.hidden {
+  transform: translateX(115%);
 }
 
-.info-cards .card .done {
-  transform: translateX(-150%);
+.info-cards .card.done {
+  transform: translateX(-115%);
 }
 
 .info-cards .card button.btn {
