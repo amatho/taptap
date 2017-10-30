@@ -1,6 +1,7 @@
 const infoCard = document.querySelector('.info-card');
 const nextButton = infoCard.querySelector('button.btn');
 const tapArea = document.getElementById('tap-area');
+const thumb = document.getElementById('thumb');
 
 const LEFT_HAND = 'left';
 const RIGHT_HAND = 'right';
@@ -16,6 +17,8 @@ const data = {
 };
 let timeStarted;
 let _taps = 0;
+
+showThumb(false);
 
 nextButton.addEventListener('click', evt => {
   // Transform away the card and start the main program
@@ -38,6 +41,8 @@ tapArea.addEventListener('click', evt => {
       and you have tapped <b>${_taps}</b> times!
     </div>
     `;
+
+    showThumb();
   }
 });
 
@@ -54,7 +59,7 @@ function startTapTesting() {
 
 function checkTimelimit() {
   let interval = setInterval(() => {
-    if (new Date() - timeStarted > 1000) {
+    if (new Date() - timeStarted > 10000) {
       console.log('outta time');
       testingTaps = false;
       timeStarted = false;
@@ -92,6 +97,8 @@ function prepareNextTry() {
     Get ready for your next try on your <strong>${activeHand}</strong> index finger! Tap the screen to start.
   </h2>
   `;
+
+  showThumb(false);
 
   setTimeout(() => {
     testingTaps = true;
@@ -154,6 +161,16 @@ function showResults() {
 
   tapArea.innerHTML = '<h1>Your results</h1>';
   tapArea.appendChild(table);
+  showThumb(false);
+}
+
+function showThumb(show = true) {
+  if (show) {
+    thumb.style.opacity = 1;
+    return;
+  }
+
+  thumb.style.opacity = 0;
 }
 
 function mock() {
