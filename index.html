@@ -8,17 +8,29 @@
   <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
-  <div class="toolbar">Taptap</div>
+  <div class="toolbar">
+    <div class="toolbar--title">taptap</div>
+    <div class="toolbar--tabs">
+      <button class="btn active">test</button>
+      <button class="btn">global average</button>
+    </div>
+  </div>
 
   <div class="info-card">
     Welcome to taptap, the app that tests your speed and agility. Get ready to click fast, and surely you'll have a blast.
     <button class="btn">next</button>
   </div>
 
-  <div id="tap-area">
-  </div>
+  <div id="tap-area" class="hidden">
+    <h1 id="next-try"></h1>
+    <p id="tap-to-start">Just begin tapping to start the timer.</p>
 
-  <div id="thumb">&#x1F44D;</div>
+    <div id="tap-count"></div>
+    <div class="taps">taps</div>
+
+    <p><span id="time-left"></span> seconds left</p>
+    <p>Try <span id="try-count"></span> of 10</p>
+  </div>
 
   <script src="scripts/main.js" defer></script>
 </body>

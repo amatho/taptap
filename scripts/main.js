@@ -1,56 +1,52 @@
 const infoCard = document.querySelector('.info-card');
 const nextButton = infoCard.querySelector('button.btn');
 const tapArea = document.getElementById('tap-area');
-const thumb = document.getElementById('thumb');
+const nextTryEl = document.getElementById('next-try');
+const tapToStartEl = document.getElementById('tap-to-start');
+const tapCountEl = document.getElementById('tap-count');
+const timeLeftEl = document.getElementById('time-left');
+const tryCountEl = document.getElementById('try-count');
 
 const LEFT_HAND = 'left';
 const RIGHT_HAND = 'right';
-let activeHand = LEFT_HAND;
 let testingTaps = false;
-const data = {
-  'left': {
-    tries: 0
-  },
-  'right': {
-    tries: 0
-  }
-};
+let tryCount = 0;
 let timeStarted;
 let _taps = 0;
 
-showThumb(false);
+const data = {
+  'left': {},
+  'right': {}
+};
 
 nextButton.addEventListener('click', evt => {
   // Transform away the card and start the main program
   infoCard.classList.add('done');
+  tapArea.classList.remove('hidden');
   startTapTesting();
 });
 
 tapArea.addEventListener('click', evt => {
   if (!timeStarted && testingTaps) {
     timeStarted = new Date();
+    showHelpText(false);
     checkTimelimit();
   }
 
   if (testingTaps) {
-    _taps += 1;
+    _taps++;
 
-    tapArea.innerHTML = `
-    <div>
-      You are on try number <b>${data[activeHand].tries + 1}</b>,
-      and you have tapped <b>${_taps}</b> times!
-    </div>
-    `;
-
-    showThumb();
+    tapCountEl.innerHTML = _taps;
   }
 });
 
 function startTapTesting() {
-  tapArea.innerHTML = `
-  <h1>Testing your ${activeHand} index finger</h1>
-  <h2>Start tapping to start the test!</h2>
-  `;
+  nextTryEl.innerHTML = `Get ready to test your
+    <i><u>${getHand(tryCount)}</u></i> index finger!`;
+  tapCountEl.innerHTML = _taps;
+  timeLeftEl.innerHTML = 10;
+  tryCountEl.innerHTML = tryCount + 1;
+  showHelpText(true);
 
   setTimeout(() => {
     testingTaps = true;
@@ -59,30 +55,25 @@ function startTapTesting() {
 
 function checkTimelimit() {
   let interval = setInterval(() => {
+    timeLeftEl.innerHTML = timeLeftInSeconds(timeStarted);
+
     if (new Date() - timeStarted > 10000) {
       console.log('outta time');
       testingTaps = false;
       timeStarted = false;
       clearInterval(interval);
 
-      if (data[RIGHT_HAND].tries >= 4) {
-        let tryNum = data[activeHand].tries;
-        data[activeHand]['try' + tryNum] = _taps;
+      const currentHand = tryCount % 2 ? RIGHT_HAND : LEFT_HAND;
+
+      if (tryCount >= 9) {
+        data[currentHand]['try' + calculateTryNum(tryCount)] = _taps;
 
         testingTaps = false;
         showResults();
-      } else if (data[activeHand].tries >= 4) {
-        let tryNum = data[activeHand].tries;
-        data[activeHand]['try' + tryNum] = _taps;
-
-        activeHand = RIGHT_HAND;
-        prepareNextTry();
       } else {
-        let tryNum = data[activeHand].tries;
-        data[activeHand]['try' + tryNum] = _taps;
+        data[currentHand]['try' + calculateTryNum(tryCount)] = _taps;
 
         prepareNextTry();
-        data[activeHand].tries += 1;
       }
     }
   }, 0.1);
@@ -90,15 +81,15 @@ function checkTimelimit() {
 
 function prepareNextTry() {
   _taps = 0;
+  tryCount++;
   testingTaps = false;
 
-  tapArea.innerHTML = `
-  <h2>
-    Get ready for your next try on your <strong>${activeHand}</strong> index finger! Tap the screen to start.
-  </h2>
-  `;
-
-  showThumb(false);
+  nextTryEl.innerHTML = `Get ready for your next try on your
+    <i><u>${getHand(tryCount)}</u></i> index finger!`;
+  tapCountEl.innerHTML = _taps;
+  timeLeftEl.innerHTML = 10;
+  tryCountEl.innerHTML = tryCount + 1;
+  showHelpText(true);
 
   setTimeout(() => {
     testingTaps = true;
@@ -161,16 +152,25 @@ function showResults() {
 
   tapArea.innerHTML = '<h1>Your results</h1>';
   tapArea.appendChild(table);
-  showThumb(false);
 }
 
-function showThumb(show = true) {
-  if (show) {
-    thumb.style.opacity = 1;
-    return;
-  }
+function timeLeftInSeconds(timeStarted) {
+  return ((10000 - (new Date() - timeStarted)) / 1000).toFixed(1);
+}
 
-  thumb.style.opacity = 0;
+function showHelpText(shouldShow) {
+  const opacity = shouldShow ? 1 : 0;
+
+  nextTryEl.style.opacity = opacity;
+  tapToStartEl.style.opacity = opacity;
+}
+
+function calculateTryNum(tryCount) {
+  return Math.floor(tryCount / 2);
+}
+
+function getHand(tryCount) {
+  return tryCount % 2 ? RIGHT_HAND : LEFT_HAND;
 }
 
 function mock() {
@@ -179,6 +179,5 @@ function mock() {
     data[RIGHT_HAND]['try'+i] = Math.pow(i + 1, 2);
   }
 
-  data[LEFT_HAND].tries = 4;
-  data[RIGHT_HAND].tries = 4;
+  tryCount = 9;
 }
